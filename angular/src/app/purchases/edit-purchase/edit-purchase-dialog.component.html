@@ -1,0 +1,153 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #editpurchaseForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    title="Edit Purchase"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+
+  <div class="modal-body">
+    <tabset>
+      <tab heading="Details" class="pt-3 px-2">
+
+        <!-- Product Name -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="productName">
+            Product Name
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="productName"
+              id="productName"
+              required
+              minlength="2"
+              maxlength="50"
+              [(ngModel)]="purchase.productName"
+              #productNameModel="ngModel"
+              #productNameEl
+            />
+            <abp-validation-summary
+              [control]="productNameModel"
+              [controlEl]="productNameEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="quantity">
+            Quantity
+          </label>
+          <div class="col-md-9">
+            <input
+              type="number"
+              class="form-control"
+              name="quantity"
+              id="quantity"
+              required
+              min="1"
+              [(ngModel)]="purchase.quantity"
+              #quantityModel="ngModel"
+              #quantityEl
+            />
+            <abp-validation-summary
+              [control]="quantityModel"
+              [controlEl]="quantityEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="price">
+            Price
+          </label>
+          <div class="col-md-9">
+            <input
+              type="number"
+              class="form-control"
+              name="price"
+              id="price"
+              required
+              min="0"
+              step="0.01"
+              [(ngModel)]="purchase.price"
+              #priceModel="ngModel"
+              #priceEl
+            />
+            <abp-validation-summary
+              [control]="priceModel"
+              [controlEl]="priceEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- Supplier -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="supplier">
+            Supplier
+          </label>
+          <div class="col-md-9">
+            <select
+              class="form-control"
+              name="supplier"
+              id="supplier"
+              required
+              [(ngModel)]="purchase.supplier"
+              #supplierModel="ngModel"
+              #supplierEl
+            >
+              <option value="">Select a supplier</option>
+              @for (sup of suppliers; track sup) {
+                <option [value]="sup">{{ sup }}</option>
+              }
+            </select>
+            <abp-validation-summary
+              [control]="supplierModel"
+              [controlEl]="supplierEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="status">
+            Status
+          </label>
+          <div class="col-md-9">
+            <select
+              class="form-control"
+              name="status"
+              id="status"
+              required
+              [(ngModel)]="purchase.status"
+              #statusModel="ngModel"
+              #statusEl
+            >
+              <option value="">Select status</option>
+              @for (st of statuses; track st) {
+                <option [value]="st">{{ st }}</option>
+              }
+            </select>
+            <abp-validation-summary
+              [control]="statusModel"
+              [controlEl]="statusEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+      </tab>
+    </tabset>
+  </div>
+
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!editpurchaseForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>
