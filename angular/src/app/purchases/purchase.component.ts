@@ -49,8 +49,7 @@ export class purchasesComponent extends PagedListingComponentBase<purchaseDto> {
     finishedCallback: Function
   ): void {
     // Filter + (future) sort/paging
-    const filtered = this.keyword
-      ? this.allPurchases.filter(p =>
+    const filtered = this.keyword ? this.allPurchases.filter(p =>
         [p.productName, String(p.quantity), String(p.price), p.supplier, p.status]
           .some(v => v.toLowerCase().includes(this.keyword.toLowerCase()))
       )

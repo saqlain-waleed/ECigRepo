@@ -3,10 +3,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-6">
-          <h1>purchases</h1>
+          <h1>brands</h1>
         </div>
         <div class="col-6 text-right">
-          <a href="javascript:;" class="btn bg-blue" (click)="createpurchase()">
+          <a href="javascript:;" class="btn bg-blue" (click)="createbrand()">
             <i class="fa fa-plus-square"></i>
             Create
           </a>
@@ -28,8 +28,14 @@
                     <i class="fas fa-search"></i>
                   </button>
                 </div>
-                <input type="text" class="form-control" name="keyword" placeholder="Search..." [(ngModel)]="keyword"
-                  (keyup.enter)="getDataPage(1)" />
+                <input
+                  type="text"
+                  class="form-control"
+                  name="keyword"
+                  placeholder="Search..."
+                  [(ngModel)]="keyword"
+                  (keyup.enter)="getDataPage(1)"
+                />
               </div>
             </div>
           </div>
@@ -40,29 +46,44 @@
             <table class="table table-striped table-bordered" [busy]="isTableLoading">
               <thead class="bg-light">
                 <tr>
-                  <th>Product name</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Supplier</th>
+                  <th>Brand Name</th>
+                  <th>Description</th>
+                  <th>Logo</th>
+                  <th>Website</th>
                   <th>Status</th>
                   <th style="width: 200px;">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                @for (purchase of purchases
-                | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems };
-                track purchase.id) {
+                @for (
+                  brand of brands
+                  | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems };
+                  track brand.id
+                ) {
                 <tr>
-                  <td>{{ purchase.productName }}</td>
-                  <td>{{ purchase.quantity }}</td>
-                  <td>{{ purchase.price | currency }}</td>
-                  <td>{{ purchase.supplier }}</td>
-                  <td>{{ purchase.status }}</td>
+                  <td>{{ brand.brandName }}</td>
+                  <td>{{ brand.description }}</td>
                   <td>
-                    <button type="button" class="btn btn-sm bg-secondary" (click)="editpurchase(purchase)">
+                    <img
+                      *ngIf="brand.logoUrl"
+                      [src]="brand.logoUrl"
+                      alt="logo"
+                      style="height:30px; max-width:60px;"
+                    />
+                  </td>
+                  <td>
+                    <a *ngIf="brand.website" [href]="brand.website" target="_blank">{{ brand.website }}</a>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="brand.isActive ? 'badge-success' : 'badge-danger'">
+                      {{ brand.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm bg-secondary" (click)="editbrand(brand)">
                       <i class="fas fa-pencil-alt"></i> Edit
                     </button>
-                    <button type="button" class="btn btn-sm bg-danger mx-2" (click)="delete(purchase)">
+                    <button type="button" class="btn btn-sm bg-danger mx-2" (click)="delete(brand)">
                       <i class="fas fa-trash"></i> Delete
                     </button>
                   </td>
@@ -85,8 +106,7 @@
             </div>
             <div class="col-sm-4 col-12">
               <div class="float-sm-right m-auto">
-                <abp-pagination-controls id="server" 
-                (pageChange)="getDataPage($event)">
+                <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
                 </abp-pagination-controls>
               </div>
             </div>
@@ -96,4 +116,4 @@
       </div>
     </div>
   </section>
-</div>
+</div>  

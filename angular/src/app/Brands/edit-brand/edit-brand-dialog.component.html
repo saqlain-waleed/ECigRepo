@@ -1,0 +1,143 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #editbrandForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    title="Edit brand"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+
+  <div class="modal-body">
+    <tabset>
+      <tab heading="Details" class="pt-3 px-2">
+
+        <!-- Brand Name -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="brandName">
+            Brand Name
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="brandName"
+              id="brandName"
+              required
+              minlength="2"
+              maxlength="50"
+              [(ngModel)]="brand.brandName"
+              #brandNameModel="ngModel"
+              #brandNameEl
+            />
+            <abp-validation-summary
+              [control]="brandNameModel"
+              [controlEl]="brandNameEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- description -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="description">
+            description
+          </label>
+          <div class="col-md-9">
+            <textarea
+              class="form-control"
+              name="description"
+              id="description"
+              required
+              minlength="5"
+              maxlength="500"
+              [(ngModel)]="brand.description"
+              #descriptionModel="ngModel"
+              #descriptionEl
+            ></textarea>
+            <abp-validation-summary
+              [control]="descriptionModel"
+              [controlEl]="descriptionEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- Logo URL -->
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="logoUrl">
+            Logo URL
+          </label>
+          <div class="col-md-9">
+            <input
+              type="url"
+              class="form-control"
+              name="logoUrl"
+              id="logoUrl"
+              [(ngModel)]="brand.logoUrl"
+              #logoUrlModel="ngModel"
+              #logoUrlEl
+            />
+            <abp-validation-summary
+              [control]="logoUrlModel"
+              [controlEl]="logoUrlEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- website -->
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="website">
+            website
+          </label>
+          <div class="col-md-9">
+            <input
+              type="url"
+              class="form-control"
+              name="website"
+              id="website"
+              [(ngModel)]="brand.website"
+              #websiteModel="ngModel"
+              #websiteEl
+            />
+            <abp-validation-summary
+              [control]="websiteModel"
+              [controlEl]="websiteEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <!-- Status (isActive) -->
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="isActive">
+            Status
+          </label>
+          <div class="col-md-9">
+            <select
+              class="form-control"
+              name="isActive"
+              id="isActive"
+              required
+              [(ngModel)]="brand.isActive"
+              #isActiveModel="ngModel"
+              #isActiveEl
+            >
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+            <abp-validation-summary
+              [control]="isActiveModel"
+              [controlEl]="isActiveEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+      </tab>
+    </tabset>
+  </div>
+
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!editbrandForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

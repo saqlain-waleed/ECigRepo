@@ -1,3 +1,4 @@
+//paged-listing-component-base.ts
 import { AppComponentBase } from 'shared/app-component-base';
 import { Component, Injector, OnInit, ChangeDetectorRef } from '@angular/core';
 
@@ -65,3 +66,8 @@ export abstract class PagedListingComponentBase<TEntityDto> extends AppComponent
     protected abstract list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void;
     protected abstract delete(entity: TEntityDto): void;
 }
+
+
+
+
+

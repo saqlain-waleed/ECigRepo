@@ -48,6 +48,11 @@ import { AppComponent } from './app.component';
                         loadChildren: () => import('./purchases/purchase-module').then((m) => m.purchaseModule),
                         canActivate: [AppRouteGuard]
                     },
+                     {
+                        path: 'brand',
+                        loadChildren: () => import('./Brands/brand-module').then((m) => m.brandModule),
+                        canActivate: [AppRouteGuard]
+                    },
                 ]
             }
         ])
