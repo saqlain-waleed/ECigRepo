@@ -25,7 +25,8 @@ export class EditbrandDialogComponent extends AppComponentBase implements OnInit
     public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef,
     private brandService: BrandService
-  ) {
+   ) 
+   {
     super(injector);
   }
 

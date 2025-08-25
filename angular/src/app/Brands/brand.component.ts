@@ -9,6 +9,7 @@ import { EditbrandDialogComponent } from './edit-brand/edit-brand-dialog.compone
 
 class PagedbrandsRequestDto extends PagedRequestDto {
   keyword!: string;
+  sorting!: string;
 }
 
 @Component({
@@ -18,6 +19,8 @@ class PagedbrandsRequestDto extends PagedRequestDto {
 export class brandsComponent extends PagedListingComponentBase<BrandDto> {
   brands: BrandDto[] = [];
   keyword = '';
+  sortField: string = 'brandName';
+  sortDirection: 'ASC' | 'DESC' = 'ASC';
 
   constructor(
     injector: Injector,
@@ -33,34 +36,23 @@ export class brandsComponent extends PagedListingComponentBase<BrandDto> {
     pageNumber: number,
     finishedCallback: Function
   ): void {
-    console.log("📌 list() called with request:", request, "pageNumber:", pageNumber);
+    request.keyword = this.keyword;
+    request.sorting = `${this.sortField} ${this.sortDirection}`;
+    request.skipCount = (pageNumber - 1) * this.pageSize;
+    request.maxResultCount = this.pageSize;
 
-    this.brandService.getAll().subscribe({
+    console.log("📌 list() called with request:", request);
+
+    this.brandService.getAll(request).subscribe({
       next: (apiResponse) => {
-        console.log("✅ Raw API Response:", apiResponse);
+        console.log("✅ API response received:", apiResponse);
 
-        let filteredItems = apiResponse.items || [];
-        console.log("📌 Initial items count:", filteredItems.length);
+        this.showPaging(
+          { items: apiResponse.items, totalCount: apiResponse.totalCount },
+          pageNumber
+        );
 
-        // Apply keyword filter
-        if (this.keyword) {
-          const keywordLower = this.keyword.toLowerCase();
-          console.log("🔍 Applying keyword filter:", this.keyword);
-
-          filteredItems = filteredItems.filter(b =>
-            [b.brandName, b.description, b.logoUrl, b.website, String(b.isActive)]
-              .some(v => v?.toLowerCase().includes(keywordLower))
-          );
-
-          console.log("📉 Items count after filtering:", filteredItems.length);
-        }
-
-        // Show paging
-        console.log("📌 Passing to showPaging. Total Count:", apiResponse.totalCount, "Page:", pageNumber);
-        this.showPaging({ items: filteredItems, totalCount: apiResponse.totalCount }, pageNumber);
-
-        // Update local array
-        this.brands = filteredItems;
+        this.brands = apiResponse.items;
         console.log("📌 Local brands updated. Count:", this.brands.length);
 
         finishedCallback();
@@ -76,30 +68,58 @@ export class brandsComponent extends PagedListingComponentBase<BrandDto> {
     });
   }
 
+  toggleSort(field: string): void {
+    console.log("🔀 toggleSort() called for field:", field);
+
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'ASC' ? 'DESC' : 'ASC';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'ASC';
+    }
+
+    console.log(`📌 Sorting applied: ${this.sortField} ${this.sortDirection}`);
+    this.getDataPage(1);
+  }
+
   delete(brand: BrandDto): void {
+    console.log("🗑️ delete() called for brand:", brand);
+
     abp.message.confirm(
       `Delete brand '${brand.brandName}' ?`, undefined,
       (result: boolean) => {
         if (result) {
           this.brandService.delete(brand.id).subscribe(() => {
+            console.log("✅ Brand deleted:", brand.id);
             abp.notify.success('Successfully deleted');
             this.refresh();
           });
+        } else {
+          console.log("❌ Delete cancelled for brand:", brand.id);
         }
       }
     );
   }
 
   createbrand(): void {
+    console.log("➕ createbrand() called");
     const modalRef: BsModalRef = this._modalService.show(CreatebrandDialogComponent, { class: 'modal-lg' });
-    modalRef.content.onSave.subscribe(() => this.refresh());
+    modalRef.content.onSave.subscribe(() => {
+      console.log("✅ Create brand saved, refreshing list");
+      this.refresh();
+    });
   }
 
   editbrand(brand: BrandDto): void {
+    console.log("✏️ editbrand() called with brand:", brand);
+    const initialState = { brand: { ...brand } };
     const modalRef: BsModalRef = this._modalService.show(EditbrandDialogComponent, {
       class: 'modal-lg',
-      initialState: { brand: { ...brand } }
+      initialState: initialState
     });
-    modalRef.content.onSave.subscribe(() => this.refresh());
+    modalRef.content.onSave.subscribe(() => {
+      console.log("✅ Brand edited, refreshing list");
+      this.refresh();
+    });
   }
 }

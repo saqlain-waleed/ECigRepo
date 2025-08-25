@@ -46,7 +46,17 @@
             <table class="table table-striped table-bordered" [busy]="isTableLoading">
               <thead class="bg-light">
                 <tr>
-                  <th>Brand Name</th>
+                  <th (click)="toggleSort('brandName')" style="cursor: pointer;">
+                    Brand Name
+                    <i 
+                      class="fa"
+                      [ngClass]="{
+                        'fa-sort': sortField !== 'brandName',
+                        'fa-sort-up': sortField === 'brandName' && sortDirection === 'ASC',
+                        'fa-sort-down': sortField === 'brandName' && sortDirection === 'DESC'
+                      }">
+                    </i>
+                  </th>
                   <th>Description</th>
                   <th>Logo</th>
                   <th>Website</th>
@@ -116,4 +126,4 @@
       </div>
     </div>
   </section>
-</div>  
+</div>

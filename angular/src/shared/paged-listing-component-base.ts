@@ -21,7 +21,7 @@ export class PagedRequestDto {
 })
 export abstract class PagedListingComponentBase<TEntityDto> extends AppComponentBase implements OnInit {
 
-    public pageSize = 10;
+    public pageSize = 3;
     public pageNumber = 1;
     public totalPages = 1;
     public totalItems: number;
@@ -44,12 +44,19 @@ export abstract class PagedListingComponentBase<TEntityDto> extends AppComponent
         this.getDataPage(this.pageNumber);
     }
 
-    public showPaging(result: PagedResultDto, pageNumber: number): void {
-        this.totalPages = ((result.totalCount - (result.totalCount % this.pageSize)) / this.pageSize) + 1;
+public showPaging(result: PagedResultDto, pageNumber: number): any {
+    this.totalPages = ((result.totalCount - (result.totalCount % this.pageSize)) / this.pageSize) + 1;
+    this.totalItems = result.totalCount;
+    this.pageNumber = pageNumber;
 
-        this.totalItems = result.totalCount;
-        this.pageNumber = pageNumber;
-    }
+    // return the values so showpage is not undefined
+    return {
+        totalPages: this.totalPages,
+        totalItems: this.totalItems,
+        pageNumber: this.pageNumber
+    };
+}
+
 
     public getDataPage(page: number): void {
         const req = new PagedRequestDto();
